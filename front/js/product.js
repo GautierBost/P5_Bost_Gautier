@@ -13,10 +13,10 @@ fetch(`http://localhost:3000/api/products/${id}`)
     document.querySelector("#title").innerHTML = product.name;
     document.querySelector("#price").innerHTML = product.price;
     document.querySelector("#description").innerHTML = product.description;
-    for (let couleur in product.colors) {
+    for (let color in product.colors) {
       document.querySelector(
         "#colors"
-      ).innerHTML += `<option value="${product.colors[couleur]}">${product.colors[couleur]}</option>`;
+      ).innerHTML += `<option value="${product.colors[color]}">${product.colors[color]}</option>`;
     }
   })
   //afficher un message en cas d'erreur
@@ -30,24 +30,21 @@ fetch(`http://localhost:3000/api/products/${id}`)
 //ajout du produit au panier
 const addProduct = () => {
   //récupération des options du produit
-  let couleur = document.getElementById("colors").value;
+  let color = document.getElementById("colors").value;
+  console.log("🚀 ~ file: product.js ~ line 29 ~ ajoutProduit ~ color", color);
+  let quantity = document.getElementById("quantity").value;
   console.log(
-    "🚀 ~ file: product.js ~ line 29 ~ ajoutProduit ~ couleur",
-    couleur
+    "🚀 ~ file: product.js ~ line 31 ~ ajoutProduit ~ quantity",
+    quantity
   );
-  let quantite = document.getElementById("quantity").value;
-  console.log(
-    "🚀 ~ file: product.js ~ line 31 ~ ajoutProduit ~ quantite",
-    quantite
-  );
-  let optionsDuProduit = {
+  let productOption = {
     _id: id,
-    colors: couleur,
-    qty: parseInt(quantite, 10),
+    colors: color,
+    qty: parseInt(quantity, 10),
   };
   console.log(
-    "🚀 ~ file: product.js ~ line 37 ~ ajoutProduit ~ optionsDuProduit",
-    optionsDuProduit
+    "🚀 ~ file: product.js ~ line 37 ~ ajoutProduit ~ productOption",
+    productOption
   );
 
   //recuperation du localStorage
@@ -61,35 +58,35 @@ const addProduct = () => {
   }
 
   //ajout du produit au storage
-  const ajoutProduitStorage = () => {
-    storage.push(optionsDuProduit);
+  const addProductToStorage = () => {
+    storage.push(productOption);
     localStorage.setItem("produits", JSON.stringify(storage));
     alert("Votre selection a bien été ajouter au panier");
   };
 
   //recherche de produit similaire
-  const produitSimilaire = storage.findIndex(
-    (produit) =>
-      produit._id == optionsDuProduit._id &&
-      produit.colors == optionsDuProduit.colors
+  const sameProduct = storage.findIndex(
+    (product) =>
+      product._id === productOption._id &&
+      product.colors === productOption.colors
   );
   console.log(
-    "🚀 ~ file: product.js ~ line 52 ~ ajoutProduit ~ produitSimilaire",
-    produitSimilaire
+    "🚀 ~ file: product.js ~ line 52 ~ ajoutProduit ~ sameProduct",
+    sameProduct
   );
 
   //modifier un produit deja présent dans le storage
-  const modifierQuantite = () => {
-    storage[produitSimilaire].qty += optionsDuProduit.qty;
+  const modifyQuantity = () => {
+    storage[sameProduct].qty += productOption.qty;
     localStorage.setItem("produits", JSON.stringify(storage));
   };
 
   //verifier la couleur et la quantité
-  if (couleur === "") {
+  if (color === "") {
     alert("Veuillez choisir une couleur!");
-  } else if (quantite <= 0) {
+  } else if (quantity <= 0) {
     alert("Veuillez choisir une quantité!");
-  } else if (quantite > 100) {
+  } else if (quantity > 100) {
     alert("Quantié maximale de 100 produits autorisé!");
   } else {
     //verifier la quantité total du storage
@@ -98,30 +95,30 @@ const addProduct = () => {
       totalProductsStorage += storage[product].qty;
     }
     console.log(
-      "🚀 ~ file: product.js ~ line 60 ~ modifierQuantite ~ totalProductsStorage",
+      "🚀 ~ file: product.js ~ line 60 ~ modifyQuantity ~ totalProductsStorage",
       totalProductsStorage
     );
     //verifier que le storage ne depassera pas 100 produits
-    let totalApresAjout = totalProductsStorage + optionsDuProduit.qty;
+    let totalAfterAdd = totalProductsStorage + productOption.qty;
     console.log(
-      "🚀 ~ file: product.js ~ line 66 ~ modifierQuantite ~ totalApresAjout",
-      totalApresAjout
+      "🚀 ~ file: product.js ~ line 66 ~ modifyQuantity ~ totalAfterAdd",
+      totalAfterAdd
     );
-    if (totalApresAjout > 100) {
+    if (totalAfterAdd > 100) {
       alert("Votre panier ne peu contenir plus de 100 produits!");
     } else {
       //si pas de produit dans le storage ajouter le produit
       if (!storage) {
-        ajoutProduitStorage();
+        addProductToStorage();
       }
       //sinon verifier qu'un produit similaire ne soit pas deja present
       else {
         //si produit similaire modifier la quantite
-        if (produitSimilaire !== -1) {
-          modifierQuantite();
+        if (sameProduct !== -1) {
+          modifyQuantity();
           //sinon ajouter le produit
         } else {
-          ajoutProduitStorage();
+          addProductToStorage();
         }
       }
     }
