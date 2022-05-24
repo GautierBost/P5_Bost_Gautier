@@ -37,7 +37,7 @@ fetch("http://localhost:3000/api/products")
                                                                     </div>
                                                                 </article>`;
       if (!storage) {
-        cartItems.innerHTML += `votre pannier est vide`;
+        cartItems.innerHTML = `votre pannier est vide`;
       }
     }
     //afficher la quantite totale et le prix total
@@ -158,9 +158,116 @@ fetch("http://localhost:3000/api/products")
 
   //afficher un message en cas d'erreur
   .catch((err) => {
-    cartItems.innerHTML += `<p>Une erreur s'est produite. Veuillez actualiser la page. Si le problème persiste, merci contactez le support.</p>`;
+    cartItems.innerHTML = `<p>Une erreur s'est produite. Veuillez actualiser la page. Si le problème persiste, merci contactez le support.</p>`;
     console.log(err);
   });
+
+//verrification du formulaire
+//prénom
+const firstName = document.getElementById("firstName");
+const patternFirstName =
+  /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð -]+$/g;
+firstName.addEventListener("change", () => {
+  const msg = document.getElementById("firstNameErrorMsg");
+  console.log(patternFirstName.test(firstName.value));
+  if (firstName.value.match(patternFirstName)) {
+    console.log("valide");
+  } else {
+    msg.innerHTML = "Prénom invalide";
+  }
+});
+
+//nom
+const lastName = document.getElementById("lastName");
+const patternLastName =
+  /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð -]+$/g;
+lastName.addEventListener("change", () => {
+  const msg = document.getElementById("lastNameErrorMsg");
+  console.log(patternLastName.test(lastName.value));
+  if (lastName.value.match(patternLastName)) {
+    console.log("valide");
+  } else {
+    msg.innerHTML = "Nom invalide";
+  }
+});
+
+//adresse
+const address = document.getElementById("address");
+const patternAddress =
+  /^[0-9a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð -']+$/g;
+address.addEventListener("change", () => {
+  const msg = document.getElementById("addressErrorMsg");
+  console.log(patternAddress.test(address.value));
+  if (address.value.match(patternAddress)) {
+    console.log("valide");
+  } else {
+    msg.innerHTML = "Adresse invalide";
+  }
+});
+
+//ville
+const city = document.getElementById("city");
+const patternCity =
+  /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð -']+$/g;
+city.addEventListener("change", () => {
+  const msg = document.getElementById("cityErrorMsg");
+  console.log(patternCity.test(city.value));
+  if (city.value.match(patternCity)) {
+    console.log("valide");
+  } else {
+    msg.innerHTML = "Ville invalide";
+  }
+});
+
+//email
+const email = document.getElementById("email");
+const patternEmail = /^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$/g;
+email.addEventListener("change", () => {
+  const msg = document.getElementById("emailErrorMsg");
+  console.log(patternEmail.test(email.value));
+  if (email.value.match(patternEmail)) {
+    console.log("valide");
+  } else {
+    msg.innerHTML = "Email invalide";
+  }
+});
+
+//envoyer les infos formulaire et produits
+const order = document.getElementById("order");
+order.addEventListener("click", (e) => {
+  e.preventDefault();
+  if (
+    firstName.value.match(patternFirstName) ||
+    lastName.value.match(patternLastName) ||
+    address.value.match(patternAddress) ||
+    city.value.match(patternCity) ||
+    email.value.match(patternEmail)
+  ) {
+    const order = {
+      contact: {
+        firstName: firstName.value,
+        lastName: lastName.value,
+        address: address.value,
+        city: city.value,
+        email: email.value,
+      },
+      products: storage,
+    };
+    console.log(
+      "🚀 ~ file: cart.js ~ line 256 ~ order.addEventListener ~ order",
+      order
+    );
+    fetch("http://localhost:3000/api/products/order", {
+      method: "POST",
+      body: JSON.stringify(order),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      //recuperer l'orderId
+      .then((res) => res.json());
+  }
+});
 
 //afficher le nombre de produits dans le pannier(nav bar)
 let totalPanier = () => {

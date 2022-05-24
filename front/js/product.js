@@ -23,7 +23,7 @@ fetch(`http://localhost:3000/api/products/${id}`)
   .catch((err) => {
     document.getElementById(
       "item"
-    ).innerHTML += `<p>Une erreur s'est produite. Veuillez actualiser la page. Si le problème persiste, merci contactez le support.</p>`;
+    ).innerHTML = `<p>Une erreur s'est produite. Veuillez actualiser la page. Si le problème persiste, merci contactez le support.</p>`;
     console.log(err);
   });
 

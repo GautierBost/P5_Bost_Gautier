@@ -15,7 +15,7 @@ fetch("http://localhost:3000/api/products")
   })
   //afficher un message en cas d'erreur
   .catch((err) => {
-    items.innerHTML += `<p>Une erreur s'est produite. Veuillez actualiser la page. Si le problème persiste, merci contactez le support.</p>`;
+    items.innerHTML = `<p>Une erreur s'est produite. Veuillez actualiser la page. Si le problème persiste, merci contactez le support.</p>`;
     console.log(err);
   });
 //afficher le nombre de produits dans le pannier(nav bar)
