@@ -132,9 +132,7 @@ button.addEventListener("click", addProduct);
 
 //afficher le nombre de produits dans le pannier(nav bar)
 let totalPanier = () => {
-  const panier = document
-    .getElementsByTagName("nav")[0]
-    .getElementsByTagName("li")[1];
+  const panier = document.getElementById("panier");
   let storage = JSON.parse(localStorage.getItem("produits"));
   let totalProduitsStorage = 0;
   for (let produit in storage) {

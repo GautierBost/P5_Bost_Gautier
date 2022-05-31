@@ -236,7 +236,9 @@ email.addEventListener("change", () => {
 const order = document.getElementById("order");
 order.addEventListener("click", (e) => {
   e.preventDefault();
-  if (
+  if (storage.length === 0) {
+    alert("Votre panier est vide");
+  } else if (
     firstName.value.match(patternFirstName) ||
     lastName.value.match(patternLastName) ||
     address.value.match(patternAddress) ||
@@ -251,7 +253,7 @@ order.addEventListener("click", (e) => {
         city: city.value,
         email: email.value,
       },
-      products: storage,
+      products: storage.map((products) => products._id),
     };
     console.log(
       "🚀 ~ file: cart.js ~ line 256 ~ order.addEventListener ~ order",
@@ -265,15 +267,23 @@ order.addEventListener("click", (e) => {
       },
     })
       //recuperer l'orderId
-      .then((res) => res.json());
+      .then((res) => res.json())
+      .then((order) => {
+        console.log("🚀 ~ file: cart.js ~ line 270 ~ .then ~ order", order);
+        const orderId = order.orderId;
+        console.log("🚀 ~ file: cart.js ~ line 272 ~ .then ~ orderId", orderId);
+        localStorage.clear();
+        window.location.href = `./confirmation.html?id=${orderId}`;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 });
 
 //afficher le nombre de produits dans le pannier(nav bar)
 let totalPanier = () => {
-  const panier = document
-    .getElementsByTagName("nav")[0]
-    .getElementsByTagName("li")[1];
+  const panier = document.getElementById("panier");
   let totalProdutsStorage = 0;
   for (let product in storage) {
     totalProdutsStorage += parseInt(storage[product].qty);

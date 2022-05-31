@@ -20,9 +20,7 @@ fetch("http://localhost:3000/api/products")
   });
 //afficher le nombre de produits dans le pannier(nav bar)
 let totalPanier = () => {
-  const panier = document
-    .getElementsByTagName("nav")[0]
-    .getElementsByTagName("li")[1];
+  const panier = document.getElementById("panier");
   let storage = JSON.parse(localStorage.getItem("produits"));
   let totalProductsStorage = 0;
   for (let product in storage) {
