@@ -172,6 +172,7 @@ firstName.addEventListener("change", () => {
   console.log(patternFirstName.test(firstName.value));
   if (firstName.value.match(patternFirstName)) {
     console.log("valide");
+    msg.innerHTML = "";
   } else {
     msg.innerHTML = "Prénom invalide";
   }
@@ -186,6 +187,7 @@ lastName.addEventListener("change", () => {
   console.log(patternLastName.test(lastName.value));
   if (lastName.value.match(patternLastName)) {
     console.log("valide");
+    msg.innerHTML = "";
   } else {
     msg.innerHTML = "Nom invalide";
   }
@@ -200,6 +202,7 @@ address.addEventListener("change", () => {
   console.log(patternAddress.test(address.value));
   if (address.value.match(patternAddress)) {
     console.log("valide");
+    msg.innerHTML = "";
   } else {
     msg.innerHTML = "Adresse invalide";
   }
@@ -214,6 +217,7 @@ city.addEventListener("change", () => {
   console.log(patternCity.test(city.value));
   if (city.value.match(patternCity)) {
     console.log("valide");
+    msg.innerHTML = "";
   } else {
     msg.innerHTML = "Ville invalide";
   }
@@ -227,6 +231,7 @@ email.addEventListener("change", () => {
   console.log(patternEmail.test(email.value));
   if (email.value.match(patternEmail)) {
     console.log("valide");
+    msg.innerHTML = "";
   } else {
     msg.innerHTML = "Email invalide";
   }
@@ -239,10 +244,18 @@ order.addEventListener("click", (e) => {
   if (storage.length === 0) {
     alert("Votre panier est vide");
   } else if (
-    firstName.value.match(patternFirstName) ||
-    lastName.value.match(patternLastName) ||
-    address.value.match(patternAddress) ||
-    city.value.match(patternCity) ||
+    firstName.value === "" ||
+    lastName.value === "" ||
+    address.value === "" ||
+    city.value === "" ||
+    email.value === ""
+  ) {
+    alert("Veuillez compléter le formulaire");
+  } else if (
+    firstName.value.match(patternFirstName) &&
+    lastName.value.match(patternLastName) &&
+    address.value.match(patternAddress) &&
+    city.value.match(patternCity) &&
     email.value.match(patternEmail)
   ) {
     const order = {
